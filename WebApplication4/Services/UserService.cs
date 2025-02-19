@@ -9,6 +9,7 @@ using WebApplication4.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using WebApplication4.Models;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 
@@ -18,11 +19,13 @@ public class UserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly ApplicationDbContext _context;
 
-    public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public UserService(UserManager<ApplicationUser> userManager, IConfiguration configuration, ApplicationDbContext context)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _context = context;
     }
     
     //[HttpPost("addNewUser")]
@@ -33,20 +36,45 @@ public class UserService
 
         if ( newUser == null )
         {
-            newUser = new ApplicationUser
-            {
-                Email = addUserDto.Email,
-                UserName = addUserDto.Email.Remove(addUserDto.Email.IndexOf('@')),
-                firstName = addUserDto.FirstName,
-                lastName = addUserDto.LastName,
-                PasswordHash = addUserDto.Password
+            
+                newUser = new ApplicationUser
+                {
+                    Email = addUserDto.Email,
+                    UserName = addUserDto.Email.Remove(addUserDto.Email.IndexOf('@')),
+                    firstName = addUserDto.FirstName,
+                    lastName = addUserDto.LastName,
+                    userRole = addUserDto.userRole,
+                    PasswordHash = addUserDto.Password
 
-            };
-            //kad se kreira user kreira se i pacijent 
+                };
+                
+                
+                
+            
+
+            //kad se kreira user kreira se i pacijent ili doktor isto
             var createNewUser = await _userManager.CreateAsync(newUser, addUserDto.Password);
             Console.WriteLine($"Adding user succeded:{createNewUser}");
 
-            if (createNewUser.Succeeded) await _userManager.AddToRoleAsync(newUser, addUserDto.userRole);
+            if (createNewUser.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, addUserDto.userRole);
+
+                if (addUserDto.userRole == "Patient")
+                {
+                    var newPatient = new Patient { User = newUser };
+                    await _context.Patients.AddAsync(newPatient);
+                    await _context.SaveChangesAsync();
+                }
+
+                else //ako nije patient mora biti doktor
+                {
+                    Console.WriteLine("DOCTOR!");
+                    var newDoctor =  new Doctor { User = newUser };
+                    await _context.Doctors.AddAsync(newDoctor);
+                    await _context.SaveChangesAsync();
+                }
+            }
             //odje mozda
         }
 

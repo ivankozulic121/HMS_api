@@ -49,15 +49,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-/*builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin")); 
-});*/
+    options.AddPolicy("Doctor", policy => policy.RequireRole("Doctor"));
+});
 
 
 builder.Services.AddTransient<RoleSeeder>();
 builder.Services.AddScoped<AdminSeeder>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<AppointmentService>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

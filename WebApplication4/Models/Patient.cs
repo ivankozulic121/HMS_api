@@ -5,7 +5,10 @@ namespace WebApplication4.Models;
 
 public class Patient
 {
-    public string[] Records { get; set; }
+    public int Id { get; set; }
+    public List<Record> Records { get; set; }
+    
+    public List<Appointment> Appointments { get; set; }
     public ApplicationUser User { get; set; }
     
 }
