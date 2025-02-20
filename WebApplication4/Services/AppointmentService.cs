@@ -31,7 +31,7 @@ public class AppointmentService
          return appointments;
     }
 
-    public async Task BookAppointment(BookAppointmentDto bookAppointmentDto, string userId)
+    public async Task<Appointment> BookAppointment(BookAppointmentDto bookAppointmentDto, string userId)
     {
         var doctor = await _context.Doctors.FindAsync(bookAppointmentDto.DoctorID);
         Console.WriteLine("ID:" + userId);
@@ -52,6 +52,6 @@ public class AppointmentService
         await _context.SaveChangesAsync();
         //var result = await _context.SaveChangesAsync();
         
-        //return appointment;
+        return appointment;
     }
 }

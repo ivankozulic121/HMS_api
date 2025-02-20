@@ -63,7 +63,7 @@ public class PatientService
 
             var record = _context.Records.FirstOrDefault(rec => rec.RecordName == newRecordDto.RecordName);
 
-            var patientRecord = new PatientRecord { Record = record, RecordDate = DateTime.Now.ToUniversalTime(), Patient = patient };
+            var patientRecord = new PatientRecord { Record = record, RecordTime = DateTime.Now.ToUniversalTime(), Patient = patient };
             
             _context.PatientRecords.Add(patientRecord);
             await _context.SaveChangesAsync();

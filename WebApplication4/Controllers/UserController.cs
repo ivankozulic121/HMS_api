@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication4.Data;
 using WebApplication4.DTOs;
 using WebApplication4.Services;
 
@@ -19,8 +20,16 @@ public class UserController: ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("register")]
+    [HttpGet]
     [Authorize(Roles = "Admin")]
+
+    /*public async Task<List<ApplicationUser>> GetAllUsers()
+    {
+        
+    }*/
+
+    [HttpPost("register")]
+    [Authorize(Roles = "Admin")] 
     public async Task<ActionResult> AddNewUser([FromBody] AddUserDto addUserDto)
     {
         
