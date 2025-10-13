@@ -62,6 +62,17 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PatientService>();
 builder.Services.AddScoped<AppointmentService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyOrigin()   
+            .AllowAnyHeader()   
+            .AllowAnyMethod();  
+    });
+});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -79,7 +90,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 //app.UseHttpsRedirection();
-
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 

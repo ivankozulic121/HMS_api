@@ -105,6 +105,9 @@ public class UserService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Aud, "http://localhost:5153"),
             new Claim(JwtRegisteredClaimNames.Iss, "http://localhost:5153"),
+            new Claim(ClaimTypes.Name, user.firstName),
+            new Claim(ClaimTypes.Name, user.lastName),
+            
             
             //new Claim(ClaimTypes.Role, "Admin" )
         };

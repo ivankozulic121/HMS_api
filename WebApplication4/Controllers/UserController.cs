@@ -40,7 +40,7 @@ public class UserController: ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult> LoginUser([FromBody] LoginUserDto loginUserDto)
     {
-        Console.WriteLine("EXECUTE LOGIN");
+        
         var tokenString = await _userService.LoginUser(loginUserDto);
         //if (user == null || !await _userManager.CheckPasswordAsync(user, loginUserDto.password))
         return Ok(new { token = tokenString });
